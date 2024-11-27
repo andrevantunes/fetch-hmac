@@ -1,0 +1,23 @@
+name: Deploy NPM
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Use node 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install dependencies
+        run: npm install
+      - name: Run unit tests
+        run: npm run build
+      - name: Authenticate NPM
+        run: echo ${{ secrets.NPM_REGISTRY }} > .npmrc
+      - name: Run unit tests
+        run: npm publish
